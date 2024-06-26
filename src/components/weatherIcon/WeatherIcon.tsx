@@ -18,6 +18,8 @@ export const WeatherIcon = ({ code, isDay }: Props) => {
     () => import(`../../assets/icons/${getIconName()}.svg?react`)
   );
 
+  console.log('Icon', getIconName());
+
   return (
     <Suspense>
       <Icon width={200} height={200} />

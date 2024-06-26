@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { WeatherIcon } from '../../../components/weatherIcon/WeatherIcon';
 import { CityResponse } from '../../../interfaces';
+import { Dropdown } from '../../../components/dropdown/Dropdown';
 
 const CITIES = ['Milan', 'New York', 'Sydney'];
 
@@ -38,27 +39,29 @@ export const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCitiesData();
-  }, []);
+  // useEffect(() => {
+  //   fetchCitiesData();
+  // }, []);
 
   // const { data } = useFetchWeatherData(45.46, 9.18);
-  // const { data } = useFetchWeatherData(-33.86, 151.21);
-  const { data } = useFetchWeatherData(-6.2, 106.82);
+  const { data } = useFetchWeatherData(-33.86, 151.21);
+  // const { data } = useFetchWeatherData(-6.2, 106.82);
 
   // console.log(data);
 
   return (
-    <div className="h-screen grid place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
-      <Suspense fallback={<div>Loading...</div>}>
-        <div>Temp: {data?.current_weather?.temperature}</div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="flex justify-center flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
+        <h4>Temp: {data?.current_weather?.temperature}</h4>
+        <Dropdown />
         <div>
           <WeatherIcon
             code={data?.current_weather?.weathercode}
             isDay={data?.current_weather?.is_day}
           />
         </div>
-      </Suspense>
-    </div>
+        <h3 className="">Dashboard</h3>
+      </div>
+    </Suspense>
   );
 };
