@@ -1,34 +1,26 @@
-import { useState, useEffect } from 'react';
-import { ForecastResponse } from '../interfaces';
+import { useState } from 'react';
+import { ForecastResponse, ICity } from '../interfaces';
 
 // API:
 // https://open-meteo.com/en/docs/dwd-api
 
-export const useFetchWeatherData = (
-  latitude,
-  longitude
-): { data?: ForecastResponse; error: string } => {
-  const [weatherData, setWeatherData] = useState();
-  const [error, setError] = useState(null);
+export const useFetchWeatherData = (city?: ICity) => {
+  const { lon, lat } = city || {};
+  const [data, setData] = useState<ForecastResponse>();
+  const [error, setError] = useState<string>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-      try {
-        const response = await fetch(url);
-        if (response.status === 429) {
-          setError('Too many requests. Please try again later.');
-          return;
-        }
-        const data = await response.json();
-        setWeatherData(data);
-      } catch (error) {
-        setError('An error occurred while fetching the data.');
-      }
-    };
+  const fetchWeatherData = async () => {
+    if (!lat || !lon) return;
 
-    fetchData();
-  }, [latitude, longitude]); // Re-fetch when coordinates change
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      setError('An error occurred while fetching the data.');
+    }
+  };
 
-  return { data: weatherData, error };
+  return { data, error, fetchWeatherData };
 };

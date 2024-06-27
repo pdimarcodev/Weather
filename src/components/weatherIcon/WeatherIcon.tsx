@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback } from 'react';
+import { Suspense, lazy, memo, useCallback } from 'react';
 import { WMOCodesMapper } from '../../helpers';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const WeatherIcon = ({ code, isDay }: Props) => {
-  if (!code) return null;
+  if (!code || !isDay) return null;
 
   const getIconName = useCallback(
     () => `${WMOCodesMapper[code]?.icon}${isDay ? 'd' : 'n'}`,
@@ -17,8 +17,6 @@ export const WeatherIcon = ({ code, isDay }: Props) => {
   const Icon = lazy(
     () => import(`../../assets/icons/${getIconName()}.svg?react`)
   );
-
-  console.log('Icon', getIconName());
 
   return (
     <Suspense>

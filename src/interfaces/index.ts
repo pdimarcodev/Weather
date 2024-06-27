@@ -46,3 +46,9 @@ export interface CityResponse {
   display_name: string;
   boundingbox: string[];
 }
+
+export interface ICity {
+  city: string;
+  lat: string;
+  lon: string;
+}
