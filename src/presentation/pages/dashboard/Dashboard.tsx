@@ -6,6 +6,10 @@ import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { CityResponse, ICity } from '../../../interfaces';
 
 const CITIES = ['Milan', 'New York', 'Sydney'];
+const backgroundColor = {
+  day: 'bg-gradient-to-r from-sky-600 to-indigo-600',
+  night: 'bg-gradient-to-r from-night-600 to-night-800',
+};
 
 export const Dashboard = () => {
   const [cities, setCities] = useState<Array<ICity>>();
@@ -15,9 +19,19 @@ export const Dashboard = () => {
 
   const onSelect = useCallback(
     (city: string) => {
-      setSelectedCity(cities?.find((c) => c.city === city));
+      if (!!cities?.length) {
+        setSelectedCity(cities.find((c) => c.city === city));
+      }
     },
     [cities]
+  );
+
+  const getBackgroundColor = useCallback(
+    () =>
+      weatherData?.current_weather?.is_day
+        ? backgroundColor.day
+        : backgroundColor.night,
+    [weatherData?.current_weather?.is_day]
   );
 
   const fetchCitiesData = async () => {
@@ -37,7 +51,6 @@ export const Dashboard = () => {
         })
       );
 
-      console.log('citiesData', citiesData);
       setCities(citiesData);
     } catch (error) {
       console.error('An error occurred while fetching the data.');
@@ -49,7 +62,7 @@ export const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (!!cities?.length) {
+    if (!!cities?.length && !selectedCity) {
       setSelectedCity(cities[0]);
 
       const list = cities.map((city) => city.city);
@@ -58,9 +71,13 @@ export const Dashboard = () => {
   }, [cities]);
 
   return (
-    <div className="flex justify-center flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
-      <ErrorBoundary fallback={<div>Error</div>}>
-        <Suspense fallback={<div>Loading...</div>}>
+    <ErrorBoundary fallback={<div>Error</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="flex justify-center flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
+          {/* <div
+          data-color={getBackgroundColor()}
+          className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
+        > */}
           <h4>Temp: {weatherData?.current_weather?.temperature}</h4>
           <Dropdown
             list={options}
@@ -74,8 +91,8 @@ export const Dashboard = () => {
             />
           </div>
           <h3 className="">Dashboard</h3>
-        </Suspense>
-      </ErrorBoundary>
-    </div>
+        </div>
+      </Suspense>
+    </ErrorBoundary>
   );
 };

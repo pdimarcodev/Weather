@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 
 interface Props {
@@ -10,13 +10,13 @@ interface Props {
 export const Dropdown = ({ list, value, onSelect }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSelectItem = useCallback((item: string) => {
+  const onSelectItem = (item: string) => {
     onSelect(item);
     setIsOpen(false);
-  }, []);
+  };
 
   return (
-    <div className="relative flex flex-col items-center w-[340px] h-[240px] rounded-lg">
+    <div className="relative flex flex-col items-center w-[340px] h-[50px] rounded-lg">
       <button
         className="bg-blue-400 p-4 w-full flex items-center justify-between font-bold text-lg rounded-lg tracking-wider border-4 border-transparent active:border-white duration-300 active:text-white"
         onClick={() => setIsOpen((v) => !v)}
