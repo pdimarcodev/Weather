@@ -1,9 +1,10 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { WeatherIcon } from '../../../components/weatherIcon/WeatherIcon';
 import { Dropdown } from '../../../components/dropdown/Dropdown';
 import ErrorBoundary from '../../../components/errorBoundary/ErrorBoundary';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { CityResponse, ICity } from '../../../interfaces';
+import { WMOCodesMapper } from '../../../helpers';
 
 const CITIES = ['Milan', 'New York', 'Sydney'];
 const backgroundColor = {
@@ -16,6 +17,12 @@ export const Dashboard = () => {
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<ICity>();
   const { data: weatherData, error } = useFetchWeatherData(selectedCity);
+  const description =
+    WMOCodesMapper[weatherData?.current_weather?.weathercode || 0]?.description;
+  const temperature = useMemo(
+    () => Math.round(weatherData?.current_weather?.temperature || 0),
+    [weatherData?.current_weather?.temperature]
+  );
 
   const onSelect = useCallback(
     (city: string) => {
@@ -73,24 +80,25 @@ export const Dashboard = () => {
   return (
     <ErrorBoundary fallback={<div>Error</div>}>
       <Suspense fallback={<div>Loading...</div>}>
-        <div className="flex justify-center flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
+        <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
           {/* <div
           data-color={getBackgroundColor()}
           className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
         > */}
-          <h4>Temp: {weatherData?.current_weather?.temperature}</h4>
+          <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
           <Dropdown
             list={options}
             value={selectedCity?.city}
             onSelect={onSelect}
           />
-          <div>
+          <div className="mt-6">
             <WeatherIcon
               code={weatherData?.current_weather?.weathercode}
               isDay={weatherData?.current_weather?.is_day}
             />
           </div>
-          <h3 className="">Dashboard</h3>
+          <span className="text-6xl text-gray-300">{temperature}°C</span>
+          <span className="text-4xl text-gray-300">{description}</span>
         </div>
       </Suspense>
     </ErrorBoundary>

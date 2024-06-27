@@ -22,7 +22,7 @@ export const WeatherIcon = ({ code, isDay }: Props) => {
   return (
     <ErrorBoundary fallback={<div>Error</div>}>
       <Suspense fallback={<div>Loading...</div>}>
-        <Icon width={340} height={340} />
+        <Icon width={250} height={250} />
       </Suspense>
     </ErrorBoundary>
   );

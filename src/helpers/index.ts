@@ -8,11 +8,11 @@ interface IIcon {
 
 export const WMOCodesMapper: Record<number, IIcon> = {
   0: {
-    description: 'Sunny',
+    description: 'Clear',
     icon: '01',
   },
   1: {
-    description: 'Mainly Sunny',
+    description: 'Mainly Clear',
     icon: '02',
   },
   2: {
