@@ -1,5 +1,6 @@
-import { Suspense, lazy, memo, useCallback } from 'react';
+import { Suspense, lazy, useCallback } from 'react';
 import { WMOCodesMapper } from '../../helpers';
+import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
 interface Props {
   code?: number;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 export const WeatherIcon = ({ code, isDay }: Props) => {
-  if (!code || !isDay) return null;
+  if (code === undefined || isDay === undefined) return null;
 
   const getIconName = useCallback(
     () => `${WMOCodesMapper[code]?.icon}${isDay ? 'd' : 'n'}`,
@@ -19,8 +20,10 @@ export const WeatherIcon = ({ code, isDay }: Props) => {
   );
 
   return (
-    <Suspense>
-      <Icon width={200} height={200} />
-    </Suspense>
+    <ErrorBoundary fallback={<div>Error</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Icon width={200} height={200} />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
