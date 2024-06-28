@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 
 interface Props {
@@ -15,10 +15,14 @@ export const Dropdown = ({ list, value, onSelect }: Props) => {
     setIsOpen(false);
   };
 
-  if (!list?.length || !value) return <div>Loading Selector</div>;
+  const Loader = memo(() => (
+    <div className="w-[340px] h-[75px] bg-gray-600 rounded-lg animate-pulse" />
+  ));
+
+  if (!list?.length || !value) return <Loader />;
 
   return (
-    <div className="relative flex flex-col items-center w-[340px] h-[50px] rounded-lg">
+    <div className="relative flex flex-col items-center w-[340px] h-[75px] rounded-lg">
       <button
         className="bg-blue-400 p-4 w-full flex items-center justify-between font-bold text-lg rounded-lg tracking-wider border-4 border-transparent active:border-white duration-300 active:text-white"
         onClick={() => setIsOpen((v) => !v)}
