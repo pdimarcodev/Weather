@@ -5,7 +5,7 @@ import { ForecastResponse, ICity } from '../interfaces';
 // https://open-meteo.com/en/docs/dwd-api
 
 export const useFetchWeatherData = (city?: ICity) => {
-  const [data, setData] = useState<ForecastResponse>();
+  const [weatherData, setWeatherData] = useState<ForecastResponse>();
   const [error, setError] = useState<string>();
 
   const fetchWeatherData = async () => {
@@ -15,9 +15,10 @@ export const useFetchWeatherData = (city?: ICity) => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      setData(data);
-    } catch (error) {
-      setError('An error occurred while fetching the data.');
+      setWeatherData(data);
+    } catch (e) {
+      setError(`An error occurred while fetching weather's data.`);
+      console.log(e);
     }
   };
 
@@ -27,5 +28,5 @@ export const useFetchWeatherData = (city?: ICity) => {
     }
   }, [city]);
 
-  return { data, error };
+  return { weatherData, error };
 };

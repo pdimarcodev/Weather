@@ -7,7 +7,7 @@ interface Props {
   onSelect: (item: string) => void;
 }
 
-export const Dropdown = ({ list, value, onSelect }: Props) => {
+const Dropdown = ({ list, value, onSelect }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSelectItem = (item: string) => {
@@ -44,3 +44,5 @@ export const Dropdown = ({ list, value, onSelect }: Props) => {
     </div>
   );
 };
+
+export default Dropdown;
