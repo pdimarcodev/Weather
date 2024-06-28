@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback } from 'react';
-import { WMOCodesMapper } from '../../helpers';
+import { WMOCodesMapper } from '../../../helpers';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
 interface Props {
@@ -16,7 +16,7 @@ export const WeatherIcon = ({ code, isDay }: Props) => {
   );
 
   const Icon = lazy(
-    () => import(`../../assets/icons/${getIconName()}.svg?react`)
+    () => import(`../../../assets/icons/${getIconName()}.svg?react`)
   );
 
   return (

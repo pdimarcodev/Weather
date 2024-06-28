@@ -6,15 +6,15 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { WeatherIcon } from '../../../components/weatherIcon/WeatherIcon';
+import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
 // import { Dropdown } from '../../../components/dropdown/Dropdown';
-import ErrorBoundary from '../../../components/errorBoundary/ErrorBoundary';
+import ErrorBoundary from '../../components/errorBoundary/ErrorBoundary';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { ICity } from '../../../interfaces';
 import { WMOCodesMapper } from '../../../helpers';
 import { useFetchCities } from '../../../hooks/useFetchCities';
 
-const Dropdown = lazy(() => import('../../../components/dropdown/Dropdown'));
+const Dropdown = lazy(() => import('../../components/dropdown/Dropdown'));
 
 const CITIES = ['Milan', 'New York', 'Sydney'];
 const backgroundColor = {
