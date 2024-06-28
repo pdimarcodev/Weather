@@ -1,20 +1,10 @@
-import {
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
-// import { Dropdown } from '../../../components/dropdown/Dropdown';
-import ErrorBoundary from '../../components/errorBoundary/ErrorBoundary';
-import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
-import { ICity } from '../../../interfaces';
-import { WMOCodesMapper } from '../../../helpers';
+import { Dropdown } from '../../components/dropdown/Dropdown';
 import { useFetchCities } from '../../../hooks/useFetchCities';
-
-const Dropdown = lazy(() => import('../../components/dropdown/Dropdown'));
+import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
+import { WMOCodesMapper } from '../../../helpers';
+import { ICity } from '../../../interfaces';
 
 const CITIES = ['Milan', 'New York', 'Sydney'];
 const backgroundColor = {
@@ -62,29 +52,23 @@ export const Dashboard = () => {
   }, [cities]);
 
   return (
-    <ErrorBoundary fallback={<div>Error</div>}>
-      <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
-        {/* <div
+    <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
+      {/* <div
           data-color={getBackgroundColor()}
           className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
         > */}
-        <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Dropdown
-            list={options}
-            value={selectedCity?.city}
-            onSelect={onSelect}
-          />
-        </Suspense>
-        <div className="mt-6">
-          <WeatherIcon
-            code={weather?.current_weather?.weathercode}
-            isDay={weather?.current_weather?.is_day}
-          />
-        </div>
-        <span className="text-6xl text-gray-300">{temperature}°C</span>
-        <span className="text-4xl text-gray-300">{description}</span>
+      <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
+
+      <Dropdown list={options} value={selectedCity?.city} onSelect={onSelect} />
+
+      <div className="mt-6">
+        <WeatherIcon
+          code={weather?.current_weather?.weathercode}
+          isDay={weather?.current_weather?.is_day}
+        />
       </div>
-    </ErrorBoundary>
+      <span className="text-6xl text-gray-300">{temperature}°C</span>
+      <span className="text-4xl text-gray-300">{description}</span>
+    </div>
   );
 };

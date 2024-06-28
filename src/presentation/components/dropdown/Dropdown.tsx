@@ -7,13 +7,15 @@ interface Props {
   onSelect: (item: string) => void;
 }
 
-const Dropdown = ({ list, value, onSelect }: Props) => {
+export const Dropdown = ({ list, value, onSelect }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSelectItem = (item: string) => {
     onSelect(item);
     setIsOpen(false);
   };
+
+  if (!list?.length || !value) return <div>Loading Selector</div>;
 
   return (
     <div className="relative flex flex-col items-center w-[340px] h-[50px] rounded-lg">
@@ -44,5 +46,3 @@ const Dropdown = ({ list, value, onSelect }: Props) => {
     </div>
   );
 };
-
-export default Dropdown;

@@ -47,11 +47,11 @@ export interface CityResponse {
   boundingbox: string[];
 }
 
-interface ICityKey {
-  [key: string]: string;
-}
+// interface ICityKey {
+//   [key: string]: string;
+// }
 
-export interface ICity extends ICityKey {
+export interface ICity {
   city: string;
   lat: string;
   lon: string;
