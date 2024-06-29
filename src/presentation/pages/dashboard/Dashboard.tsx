@@ -51,6 +51,8 @@ export const Dashboard = () => {
     }
   }, [cities]);
 
+  console.log('Temp', temperature);
+
   return (
     <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
       {/* <div

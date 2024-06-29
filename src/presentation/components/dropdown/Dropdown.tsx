@@ -7,6 +7,10 @@ interface Props {
   onSelect: (item: string) => void;
 }
 
+const Loader = memo(() => (
+  <div className="w-[340px] h-[75px] bg-gray-600 rounded-lg animate-pulse" />
+));
+
 export const Dropdown = ({ list, value, onSelect }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,10 +18,6 @@ export const Dropdown = ({ list, value, onSelect }: Props) => {
     onSelect(item);
     setIsOpen(false);
   };
-
-  const Loader = memo(() => (
-    <div className="w-[340px] h-[75px] bg-gray-600 rounded-lg animate-pulse" />
-  ));
 
   if (!list?.length || !value) return <Loader />;
 
