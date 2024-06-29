@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CityResponse, ICity } from '../interfaces';
 
 export const useFetchCities = (cities: Array<string>) => {
   const [citiesData, setCitiesData] = useState<Array<ICity>>();
   const [error, setError] = useState<string>();
 
-  const fetchCitiesData = async () => {
+  const fetchCitiesData = useCallback(async () => {
     try {
       const data = await Promise.all(
         cities.map(async (city) => {
@@ -27,7 +27,7 @@ export const useFetchCities = (cities: Array<string>) => {
       setError(`An error occurred while fetching cities' data.`);
       console.error(e);
     }
-  };
+  }, [cities]);
 
   useEffect(() => {
     fetchCitiesData();

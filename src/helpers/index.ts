@@ -1,10 +1,7 @@
 // WMO Weather interpretation codes (WW):
 // https://open-meteo.com/en/docs/dwd-api
 
-interface IIcon {
-  description: string;
-  icon: string;
-}
+import { IIcon } from '../interfaces';
 
 export const WMOCodesMapper: Record<number, IIcon> = {
   0: {
@@ -144,4 +141,16 @@ export const WMOCodesMapper: Record<number, IIcon> = {
     description: 'Thunderstorm With Hail',
     icon: '11',
   },
+};
+
+export const dateTimeFormatter = (ISODate?: string, city?: string) => {
+  if (!ISODate || !city) return '';
+
+  const date = new Date(ISODate);
+
+  return new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    // timeZone: city,
+  }).format(date);
 };
