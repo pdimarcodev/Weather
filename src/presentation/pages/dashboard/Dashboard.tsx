@@ -6,12 +6,18 @@ import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { WMOCodesMapper } from '../../../helpers';
 import { ICity } from '../../../interfaces';
 
+/**
+ * Constants
+ */
 const CITIES = ['Milan', 'New York', 'Sydney'];
 const backgroundColor = {
   day: 'bg-gradient-to-r from-sky-600 to-indigo-600',
   night: 'bg-gradient-to-r from-night-600 to-night-800',
 };
 
+/**
+ * Dashboard Component
+ */
 export const Dashboard = () => {
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<ICity>();

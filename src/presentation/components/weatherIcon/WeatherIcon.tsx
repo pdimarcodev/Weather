@@ -1,29 +1,42 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useLayoutEffect, useState } from 'react';
 import { WMOCodesMapper } from '../../../helpers';
 
+/**
+ * Types
+ */
 interface Props {
   code?: number;
   isDay?: number;
 }
 
+/**
+ * Loader Component
+ */
 const Loader = memo(() => (
   <div className="w-[250px] h-[250px] shrink-0 bg-gray-400 rounded-full animate-pulse" />
 ));
 
+/**
+ * WeatherIcon Component
+ */
 export const WeatherIcon = memo(({ code, isDay }: Props) => {
-  if (code === undefined || isDay === undefined) return <Loader />;
+  const [iconUrl, setIconUrl] = useState<string>();
 
-  const getIconName = useCallback(
-    () => `${WMOCodesMapper[code]?.icon}${isDay ? 'd' : 'n'}`,
-    [code, isDay]
-  );
-
-  function getImageUrl() {
-    return new URL(
-      `../../../assets/icons/${getIconName()}.svg`,
+  const getUrl = useCallback(() => {
+    const url = new URL(
+      `../../../assets/icons/${WMOCodesMapper[code as number]?.icon}${isDay ? 'd' : 'n'}.svg`,
       import.meta.url
     ).href;
-  }
+    setIconUrl(url);
+  }, [code, isDay]);
 
-  return <img src={getImageUrl()} width={250} height={250} />;
+  useLayoutEffect(() => {
+    if (code !== undefined && isDay !== undefined) {
+      getUrl();
+    }
+  }, [code, isDay]);
+
+  if (!iconUrl) return <Loader />;
+
+  return <img src={iconUrl} width={250} height={250} />;
 });
