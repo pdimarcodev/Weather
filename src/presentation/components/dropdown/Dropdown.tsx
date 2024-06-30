@@ -83,17 +83,20 @@ export const Dropdown = ({ list, value, onSelect }: Props) => {
           <AiOutlineCaretUp className="h-8" />
         )}
       </button>
-      {isOpen && list && (
+      {isOpen && !!list?.length && (
         <div className="bg-blue-400 absolute top-20 flex flex-col items-start rounded-lg p-2 w-full">
-          {list.map((item) => (
-            <div
-              key={item}
-              className="flex w-full justify-between p-4 hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4"
-              onClick={() => onSelectItem(item)}
-            >
-              <h3 className="font-bold">{item}</h3>
-            </div>
-          ))}
+          {list.map(
+            (item) =>
+              item !== value && (
+                <div
+                  key={item}
+                  className="flex w-full justify-between p-4 hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4"
+                  onClick={() => onSelectItem(item)}
+                >
+                  <h3 className="font-bold">{item}</h3>
+                </div>
+              )
+          )}
         </div>
       )}
     </div>
