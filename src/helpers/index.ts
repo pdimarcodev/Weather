@@ -143,14 +143,44 @@ export const WMOCodesMapper: Record<number, IIcon> = {
   },
 };
 
-export const dateTimeFormatter = (ISODate?: string, city?: string) => {
-  if (!ISODate || !city) return '';
+export const dateTimeFormatter = (ISODate?: string) => {
+  if (!ISODate) return '';
 
   const date = new Date(ISODate);
 
   return new Intl.DateTimeFormat('en-GB', {
-    dateStyle: 'medium',
+    dateStyle: 'long',
     timeStyle: 'short',
-    // timeZone: city,
-  }).format(date);
+    hour12: true,
+  })
+    .format(date)
+    .replace('at', ' -')
+    .replace('am', 'AM')
+    .replace('pm', 'PM');
+};
+
+const DIRECTIONS = [
+  'N',
+  'NNE',
+  'NE',
+  'ENE',
+  'E',
+  'ESE',
+  'SE',
+  'SSE',
+  'S',
+  'SSW',
+  'SW',
+  'WSW',
+  'W',
+  'WNW',
+  'NW',
+  'NNW',
+];
+
+export const getCardinalWindDirection = (degrees?: number): string => {
+  if (degrees === undefined) return '';
+
+  const i = Math.round((degrees + 11.25) / 22.5) % 16;
+  return DIRECTIONS[i];
 };

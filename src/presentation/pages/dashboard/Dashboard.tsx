@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
 import { Dropdown } from '../../components/dropdown/Dropdown';
+import { WindInfo } from '../../components/windInfo/WindInfo';
 import { useFetchCities } from '../../../hooks/useFetchCities';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
-import { WMOCodesMapper } from '../../../helpers';
+import { WMOCodesMapper, dateTimeFormatter } from '../../../helpers';
 import { ICity } from '../../../interfaces';
 
 /**
@@ -29,6 +30,10 @@ export const Dashboard = () => {
   const temperature = useMemo(
     () => Math.round(weather?.current_weather?.temperature || 0),
     [weather?.current_weather?.temperature]
+  );
+  const datetime = useMemo(
+    () => dateTimeFormatter(weather?.current_weather?.time),
+    [weather?.current_weather?.time]
   );
 
   const onSelect = useCallback(
@@ -57,7 +62,7 @@ export const Dashboard = () => {
     }
   }, [cities]);
 
-  console.log('Temp', temperature);
+  console.log('Time', datetime);
 
   return (
     <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
@@ -76,7 +81,12 @@ export const Dashboard = () => {
         />
       </div>
       <span className="text-6xl text-gray-300">{temperature}°C</span>
-      <span className="text-4xl text-gray-300">{description}</span>
+      <span className="text-4xl text-gray-300 my-2">{description}</span>
+      <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
+      <WindInfo
+        direction={weather?.current_weather?.winddirection}
+        speed={weather?.current_weather?.windspeed}
+      />
     </div>
   );
 };
