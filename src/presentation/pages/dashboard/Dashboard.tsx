@@ -5,7 +5,7 @@ import { WindInfo } from '../../components/windInfo/WindInfo';
 import { useFetchCities } from '../../../hooks/useFetchCities';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { WMOCodesMapper, dateTimeFormatter } from '../../../helpers';
-import { ICity } from '../../../interfaces';
+import { CurrentWeather, ICity } from '../../../interfaces';
 
 /**
  * Constants
@@ -30,22 +30,35 @@ export const Dashboard = () => {
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<ICity>();
   const { citiesData: cities, error: citiesError } = useFetchCities(CITIES);
-  const { weatherData: weather, error: weatherError } =
-    useFetchWeatherData(selectedCity);
-  const description = useMemo(
-    () =>
-      WMOCodesMapper[weather?.current_weather?.weathercode as number]
-        ?.description ?? 'No description available',
-    [weather?.current_weather?.weathercode]
-  );
-  const temperature = useMemo(
-    () => Math.round(weather?.current_weather?.temperature as number) ?? 'N/A',
-    [weather?.current_weather?.temperature]
-  );
-  const datetime = useMemo(
-    () => dateTimeFormatter(weather?.current_weather?.time),
-    [weather?.current_weather?.time]
-  );
+  const {
+    weatherData: {
+      current_weather: {
+        weathercode: weatherCode,
+        temperature,
+        time,
+        is_day: isDay,
+        winddirection: windDirection,
+        windspeed: windSpeed,
+      } = {} as CurrentWeather,
+    } = {},
+    error: weatherError,
+  } = useFetchWeatherData(selectedCity) || {};
+
+  const description = useMemo(() => {
+    if (weatherCode !== undefined) {
+      return (
+        WMOCodesMapper[weatherCode]?.description ?? 'No description available'
+      );
+    }
+  }, [weatherCode]);
+
+  const roundedTemperature = useMemo(() => {
+    if (temperature !== undefined) {
+      return Math.round(temperature) ?? 'N/A';
+    }
+  }, [temperature]);
+
+  const datetime = useMemo(() => dateTimeFormatter(time), [time]);
 
   const onSelect = useCallback(
     (city: string) => {
@@ -57,11 +70,8 @@ export const Dashboard = () => {
   );
 
   const getBackgroundColor = useCallback(
-    () =>
-      weather?.current_weather?.is_day
-        ? backgroundColor.day
-        : backgroundColor.night,
-    [weather?.current_weather?.is_day]
+    () => (isDay ? backgroundColor.day : backgroundColor.night),
+    [isDay]
   );
 
   useEffect(() => {
@@ -82,28 +92,20 @@ export const Dashboard = () => {
           className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
         > */}
       <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
-
       <Dropdown list={options} value={selectedCity?.city} onSelect={onSelect} />
-
       <div className="mt-6">
-        <WeatherIcon
-          code={weather?.current_weather?.weathercode}
-          isDay={weather?.current_weather?.is_day}
-        />
+        <WeatherIcon code={weatherCode} isDay={isDay} />
       </div>
-      {temperature === undefined || !description || !datetime ? (
+      {!roundedTemperature || !description || !datetime ? (
         <Loader />
       ) : (
         <>
-          <span className="text-6xl text-gray-300">{temperature}°C</span>
+          <span className="text-6xl text-gray-300">{roundedTemperature}°C</span>
           <span className="text-4xl text-gray-300 my-2">{description}</span>
           <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
         </>
       )}
-      <WindInfo
-        direction={weather?.current_weather?.winddirection}
-        speed={weather?.current_weather?.windspeed}
-      />
+      <WindInfo direction={windDirection} speed={windSpeed} />
     </div>
   );
 };
