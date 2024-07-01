@@ -24,7 +24,7 @@ const Loader = memo(() => (
 ));
 
 /**
- * Dashboard Component
+ * Dashboard Page
  */
 export const Dashboard = () => {
   const [options, setOptions] = useState<string[]>([]);
