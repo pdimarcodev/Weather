@@ -20,7 +20,7 @@ const ICON_INITIAL_POSITION = 90;
  * Loader Component
  */
 const Loader = memo(() => (
-  <div className="w-[340px] h-[75px] bg-gray-600 rounded-lg animate-pulse" />
+  <div className="mt-2 w-[340px] h-[30px] bg-gray-600 rounded-lg animate-pulse" />
 ));
 
 /**
@@ -28,7 +28,7 @@ const Loader = memo(() => (
  */
 export const WindInfo = memo(({ direction, speed }: Props) => {
   const rotate = useMemo(() => {
-    if (!!direction) {
+    if (direction !== undefined) {
       if (direction < ICON_INITIAL_POSITION) {
         return `rotate(${direction + 360 - ICON_INITIAL_POSITION}deg)`;
       }

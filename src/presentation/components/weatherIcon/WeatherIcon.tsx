@@ -23,6 +23,7 @@ export const WeatherIcon = memo(({ code, isDay }: Props) => {
   const [iconUrl, setIconUrl] = useState<string>();
 
   const getUrl = useCallback(() => {
+    // TODO: check empty state
     const url = new URL(
       `../../../assets/icons/${WMOCodesMapper[code as number]?.icon}${isDay ? 'd' : 'n'}.svg`,
       import.meta.url

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
 import { Dropdown } from '../../components/dropdown/Dropdown';
 import { WindInfo } from '../../components/windInfo/WindInfo';
@@ -17,6 +17,13 @@ const backgroundColor = {
 };
 
 /**
+ * Loader Component
+ */
+const Loader = memo(() => (
+  <div className="mt-8 w-[340px] h-[150px] bg-gray-600 rounded-lg animate-pulse" />
+));
+
+/**
  * Dashboard Component
  */
 export const Dashboard = () => {
@@ -25,10 +32,14 @@ export const Dashboard = () => {
   const { citiesData: cities, error: citiesError } = useFetchCities(CITIES);
   const { weatherData: weather, error: weatherError } =
     useFetchWeatherData(selectedCity);
-  const description =
-    WMOCodesMapper[weather?.current_weather?.weathercode || 0]?.description;
+  const description = useMemo(
+    () =>
+      WMOCodesMapper[weather?.current_weather?.weathercode as number]
+        ?.description ?? 'No description available',
+    [weather?.current_weather?.weathercode]
+  );
   const temperature = useMemo(
-    () => Math.round(weather?.current_weather?.temperature || 0),
+    () => Math.round(weather?.current_weather?.temperature as number) ?? 'N/A',
     [weather?.current_weather?.temperature]
   );
   const datetime = useMemo(
@@ -62,7 +73,7 @@ export const Dashboard = () => {
     }
   }, [cities]);
 
-  console.log('Time', datetime);
+  console.log('Temp', temperature);
 
   return (
     <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
@@ -80,9 +91,15 @@ export const Dashboard = () => {
           isDay={weather?.current_weather?.is_day}
         />
       </div>
-      <span className="text-6xl text-gray-300">{temperature}°C</span>
-      <span className="text-4xl text-gray-300 my-2">{description}</span>
-      <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
+      {temperature === undefined || !description || !datetime ? (
+        <Loader />
+      ) : (
+        <>
+          <span className="text-6xl text-gray-300">{temperature}°C</span>
+          <span className="text-4xl text-gray-300 my-2">{description}</span>
+          <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
+        </>
+      )}
       <WindInfo
         direction={weather?.current_weather?.winddirection}
         speed={weather?.current_weather?.windspeed}
