@@ -15,8 +15,8 @@ import { ShowIf } from '../../components/showIf/ShowIf';
  */
 const CITIES = ['Milan', 'New York', 'Sydney'];
 const backgroundColor = {
-  day: 'bg-gradient-to-r from-sky-600 to-indigo-600',
-  night: 'bg-gradient-to-r from-night-600 to-night-800',
+  day: 'from-sky-600 to-indigo-600',
+  night: 'from-gray-800 to-gray-950',
 };
 
 /**
@@ -70,11 +70,6 @@ export const Dashboard = () => {
     [cities]
   );
 
-  const getBackgroundColor = useCallback(
-    () => (isDay ? backgroundColor.day : backgroundColor.night),
-    [isDay]
-  );
-
   const retry = useCallback(() => {
     retryCitiesData();
     retryWeatherData();
@@ -89,14 +84,10 @@ export const Dashboard = () => {
     }
   }, [cities]);
 
-  console.log('Temp', temperature);
-
   return (
-    <div className="flex flex-col m-auto h-screen place-items-center bg-gradient-to-r from-sky-600 to-indigo-600">
-      {/* <div
-          data-color={getBackgroundColor()}
-          className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
-        > */}
+    <div
+      className={`flex flex-col m-auto h-screen place-items-center bg-gradient-to-r ${isDay === 0 ? backgroundColor.night : backgroundColor.day}`}
+    >
       <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
       <ShowIf condition={!citiesError && !weatherError}>
         <Dropdown
