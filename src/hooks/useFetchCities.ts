@@ -7,6 +7,7 @@ export const useFetchCities = (cities: Array<string>) => {
 
   const fetchCitiesData = useCallback(async () => {
     try {
+      throw new Error('Not implemented');
       const data = await Promise.all(
         cities.map(async (city) => {
           const response = await fetch(
@@ -25,13 +26,17 @@ export const useFetchCities = (cities: Array<string>) => {
       setCitiesData(data);
     } catch (e) {
       setError(`An error occurred while fetching cities' data.`);
-      console.error(e);
     }
   }, [cities]);
+
+  const retry = useCallback(() => {
+    setError(undefined);
+    fetchCitiesData();
+  }, []);
 
   useEffect(() => {
     fetchCitiesData();
   }, []);
 
-  return { citiesData, error };
+  return { citiesData, error, retry };
 };

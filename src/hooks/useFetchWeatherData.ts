@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ForecastResponse, ICity } from '../interfaces';
 
 // API:
@@ -11,16 +11,20 @@ export const useFetchWeatherData = (city?: ICity) => {
   const fetchWeatherData = async () => {
     const { lon, lat } = city || {};
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-
     try {
+      throw new Error('Not implemented');
       const response = await fetch(url);
       const data = await response.json();
       setWeatherData(data);
     } catch (e) {
       setError(`An error occurred while fetching weather's data.`);
-      console.log(e);
     }
   };
+
+  const retry = useCallback(() => {
+    setError(undefined);
+    fetchWeatherData();
+  }, []);
 
   useEffect(() => {
     if (city) {
@@ -28,5 +32,5 @@ export const useFetchWeatherData = (city?: ICity) => {
     }
   }, [city]);
 
-  return { weatherData, error };
+  return { weatherData, error, retry };
 };

@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
 import { Dropdown } from '../../components/dropdown/Dropdown';
 import { WindInfo } from '../../components/windInfo/WindInfo';
+import { Error } from '../../components/error/Error';
 import { useFetchCities } from '../../../hooks/useFetchCities';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { WMOCodesMapper, dateTimeFormatter } from '../../../helpers';
@@ -29,7 +30,11 @@ const Loader = memo(() => (
 export const Dashboard = () => {
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<ICity>();
-  const { citiesData: cities, error: citiesError } = useFetchCities(CITIES);
+  const {
+    citiesData: cities,
+    error: citiesError,
+    retry: retryCitiesData,
+  } = useFetchCities(CITIES);
   const {
     weatherData: {
       current_weather: {
@@ -42,6 +47,7 @@ export const Dashboard = () => {
       } = {} as CurrentWeather,
     } = {},
     error: weatherError,
+    retry: retryWeatherData,
   } = useFetchWeatherData(selectedCity) || {};
 
   const description = useMemo(() => {
@@ -74,6 +80,11 @@ export const Dashboard = () => {
     [isDay]
   );
 
+  const retry = useCallback(() => {
+    retryCitiesData();
+    retryWeatherData();
+  }, []);
+
   useEffect(() => {
     if (!!cities?.length && !selectedCity) {
       setSelectedCity(cities[0]);
@@ -92,20 +103,32 @@ export const Dashboard = () => {
           className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
         > */}
       <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
-      <Dropdown list={options} value={selectedCity?.city} onSelect={onSelect} />
-      <div className="mt-6">
-        <WeatherIcon code={weatherCode} isDay={isDay} />
-      </div>
-      {!roundedTemperature || !description || !datetime ? (
-        <Loader />
+      {citiesError || weatherError ? (
+        <Error errors={[citiesError || '', weatherError || '']} retry={retry} />
       ) : (
         <>
-          <span className="text-6xl text-gray-300">{roundedTemperature}°C</span>
-          <span className="text-4xl text-gray-300 my-2">{description}</span>
-          <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
+          <Dropdown
+            list={options}
+            value={selectedCity?.city}
+            onSelect={onSelect}
+          />
+          <div className="mt-6">
+            <WeatherIcon code={weatherCode} isDay={isDay} />
+          </div>
+          {!roundedTemperature || !description || !datetime ? (
+            <Loader />
+          ) : (
+            <>
+              <span className="text-6xl text-gray-300">
+                {roundedTemperature}°C
+              </span>
+              <span className="text-4xl text-gray-300 my-2">{description}</span>
+              <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
+            </>
+          )}
+          <WindInfo direction={windDirection} speed={windSpeed} />
         </>
       )}
-      <WindInfo direction={windDirection} speed={windSpeed} />
     </div>
   );
 };
