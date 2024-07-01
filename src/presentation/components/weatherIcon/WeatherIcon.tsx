@@ -17,17 +17,33 @@ const Loader = memo(() => (
 ));
 
 /**
+ * Empty State Component
+ */
+const EmptyState = memo(() => (
+  <div className="w-[250px] h-[250px] flex justify-center items-center">
+    <span className="text-2xl text-gray-300">No image available.</span>
+  </div>
+));
+
+/**
  * WeatherIcon Component
  */
 export const WeatherIcon = memo(({ code, isDay }: Props) => {
   const [iconUrl, setIconUrl] = useState<string>();
 
   const getUrl = useCallback(() => {
-    // TODO: check empty state
+    const iconCode = code && WMOCodesMapper[code]?.icon;
+
+    if (!iconCode) {
+      setIconUrl('');
+      return;
+    }
+
     const url = new URL(
-      `../../../assets/icons/${WMOCodesMapper[code as number]?.icon}${isDay ? 'd' : 'n'}.svg`,
+      `../../../assets/icons/${iconCode}${isDay ? 'd' : 'n'}.svg`,
       import.meta.url
     ).href;
+
     setIconUrl(url);
   }, [code, isDay]);
 
@@ -37,7 +53,8 @@ export const WeatherIcon = memo(({ code, isDay }: Props) => {
     }
   }, [code, isDay]);
 
-  if (!iconUrl) return <Loader />;
+  if (iconUrl == undefined) return <Loader />;
+  if (!iconUrl) return <EmptyState />;
 
   return <img src={iconUrl} width={250} height={250} />;
 });
