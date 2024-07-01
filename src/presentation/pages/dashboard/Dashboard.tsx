@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
-import { Dropdown } from '../../components/dropdown/Dropdown';
-import { WindInfo } from '../../components/windInfo/WindInfo';
-import { Error } from '../../components/error/Error';
-import { useFetchCities } from '../../../hooks/useFetchCities';
-import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
+import {
+  Dropdown,
+  Error,
+  ShowIf,
+  WeatherIcon,
+  WeatherInfo,
+  WindInfo,
+} from '../../components';
+import { useFetchCities, useFetchWeatherData } from '../../../hooks';
 import { WMOCodesMapper, dateTimeFormatter } from '../../../helpers';
 import { CurrentWeather, ICity } from '../../../interfaces';
-import { WeatherInfo } from '../../components/weatherInfo/WeatherInfo';
-import { ShowIf } from '../../components/showIf/ShowIf';
 
 /**
  * Constants
