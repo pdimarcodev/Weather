@@ -7,7 +7,6 @@ export const useFetchCities = (cities: Array<string>) => {
 
   const fetchCitiesData = useCallback(async () => {
     try {
-      throw new Error('Not implemented');
       const data = await Promise.all(
         cities.map(async (city) => {
           const response = await fetch(

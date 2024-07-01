@@ -19,9 +19,9 @@ const ICON_INITIAL_POSITION = 90;
 /**
  * Loader Component
  */
-const Loader = memo(() => (
+const Loader = () => (
   <div className="mt-2 w-[340px] h-[30px] bg-gray-600 rounded-lg animate-pulse" />
-));
+);
 
 /**
  * WindInfo Componentf

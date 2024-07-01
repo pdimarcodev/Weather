@@ -12,18 +12,18 @@ interface Props {
 /**
  * Loader Component
  */
-const Loader = memo(() => (
+const Loader = () => (
   <div className="w-[250px] h-[250px] shrink-0 bg-gray-400 rounded-full animate-pulse" />
-));
+);
 
 /**
  * Empty State Component
  */
-const EmptyState = memo(() => (
+const EmptyState = () => (
   <div className="w-[250px] h-[250px] flex justify-center items-center">
     <span className="text-2xl text-gray-300">No image available.</span>
   </div>
-));
+);
 
 /**
  * WeatherIcon Component

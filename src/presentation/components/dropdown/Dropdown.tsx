@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 
 /**
@@ -20,14 +20,14 @@ const ARROW_DOWN = 'ArrowDown';
 /**
  * Loader Component
  */
-const Loader = memo(() => (
+const Loader = () => (
   <div className="w-[340px] h-[75px] bg-gray-600 rounded-lg animate-pulse" />
-));
+);
 
 /**
  * Dropdown Component
  */
-export const Dropdown = ({ list, value, onSelect }: Props) => {
+export const Dropdown: FC<Props> = ({ list, value, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

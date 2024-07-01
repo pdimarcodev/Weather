@@ -12,7 +12,6 @@ export const useFetchWeatherData = (city?: ICity) => {
     const { lon, lat } = city || {};
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
     try {
-      throw new Error('Not implemented');
       const response = await fetch(url);
       const data = await response.json();
       setWeatherData(data);

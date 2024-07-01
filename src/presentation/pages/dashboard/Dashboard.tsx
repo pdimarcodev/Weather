@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { WeatherIcon } from '../../components/weatherIcon/WeatherIcon';
 import { Dropdown } from '../../components/dropdown/Dropdown';
 import { WindInfo } from '../../components/windInfo/WindInfo';
@@ -7,6 +7,8 @@ import { useFetchCities } from '../../../hooks/useFetchCities';
 import { useFetchWeatherData } from '../../../hooks/useFetchWeatherData';
 import { WMOCodesMapper, dateTimeFormatter } from '../../../helpers';
 import { CurrentWeather, ICity } from '../../../interfaces';
+import { WeatherInfo } from '../../components/weatherInfo/WeatherInfo';
+import { ShowIf } from '../../components/showIf/ShowIf';
 
 /**
  * Constants
@@ -16,13 +18,6 @@ const backgroundColor = {
   day: 'bg-gradient-to-r from-sky-600 to-indigo-600',
   night: 'bg-gradient-to-r from-night-600 to-night-800',
 };
-
-/**
- * Loader Component
- */
-const Loader = memo(() => (
-  <div className="mt-8 w-[340px] h-[150px] bg-gray-600 rounded-lg animate-pulse" />
-));
 
 /**
  * Dashboard Page
@@ -103,32 +98,25 @@ export const Dashboard = () => {
           className={`flex justify-center flex-col m-auto h-screen place-items-center ${getBackgroundColor()}`}
         > */}
       <h1 className="my-8 text-6xl text-gray-300">Current Weather</h1>
-      {citiesError || weatherError ? (
+      <ShowIf condition={!citiesError && !weatherError}>
+        <Dropdown
+          list={options}
+          value={selectedCity?.city}
+          onSelect={onSelect}
+        />
+        <div className="mt-6">
+          <WeatherIcon code={weatherCode} isDay={isDay} />
+        </div>
+        <WeatherInfo
+          temperature={roundedTemperature}
+          description={description}
+          datetime={datetime}
+        />
+        <WindInfo direction={windDirection} speed={windSpeed} />
+      </ShowIf>
+      <ShowIf condition={!!citiesError || !!weatherError}>
         <Error errors={[citiesError || '', weatherError || '']} retry={retry} />
-      ) : (
-        <>
-          <Dropdown
-            list={options}
-            value={selectedCity?.city}
-            onSelect={onSelect}
-          />
-          <div className="mt-6">
-            <WeatherIcon code={weatherCode} isDay={isDay} />
-          </div>
-          {!roundedTemperature || !description || !datetime ? (
-            <Loader />
-          ) : (
-            <>
-              <span className="text-6xl text-gray-300">
-                {roundedTemperature}°C
-              </span>
-              <span className="text-4xl text-gray-300 my-2">{description}</span>
-              <span className="text-2xl text-gray-300 mt-2">{datetime}</span>
-            </>
-          )}
-          <WindInfo direction={windDirection} speed={windSpeed} />
-        </>
-      )}
+      </ShowIf>
     </div>
   );
 };
