@@ -24,7 +24,7 @@ const Loader = () => (
 );
 
 /**
- * WindInfo Componentf
+ * WindInfo Component
  */
 export const WindInfo = memo(({ direction, speed }: Props) => {
   const rotate = useMemo(() => {

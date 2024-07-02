@@ -5,7 +5,7 @@ import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
  * Types
  */
 interface Props {
-  list?: string[];
+  list?: Array<string>;
   value?: string;
   onSelect: (item: string) => void;
 }
