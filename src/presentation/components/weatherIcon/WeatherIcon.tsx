@@ -32,9 +32,9 @@ export const WeatherIcon = memo(({ code, isDay }: Props) => {
   const [iconUrl, setIconUrl] = useState<string>();
 
   const getUrl = useCallback(() => {
-    const iconCode = code && WMOCodesMapper[code]?.icon;
+    const iconCode = WMOCodesMapper[code!]?.icon;
 
-    if (!iconCode) {
+    if (iconCode === undefined) {
       setIconUrl('');
       return;
     }
@@ -53,8 +53,8 @@ export const WeatherIcon = memo(({ code, isDay }: Props) => {
     }
   }, [code, isDay]);
 
-  if (iconUrl == undefined) return <Loader />;
-  if (!iconUrl) return <EmptyState />;
+  if (iconUrl === undefined) return <Loader />;
+  if (iconUrl === '') return <EmptyState />;
 
   return <img src={iconUrl} width={250} height={250} />;
 });
